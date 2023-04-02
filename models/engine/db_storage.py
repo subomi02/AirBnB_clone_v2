@@ -21,17 +21,11 @@ classes = {"Amenity": Amenity, "City": City,
 
 
 class DBStorage():
-    """
-    Database Engine for AirBnB project
-    """
     __engine = None
     __session = None
 
 
     def __init__(self):
-        """
-        Init
-        """
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'
                                       .format(getenv('HBNB_MYSQL_USER'),
                                               getenv('HBNB_MYSQL_PWD'),
@@ -42,9 +36,6 @@ class DBStorage():
             Base.metadata.drop_all(bind=self.__engine)
 
     def all(self, cls=None):
-        """
-        query on the current database session (self.__session)
-        """
         new_dict = {}
         for ls in classes:
             if cls is None or cls is classes[ls] or cls is ls:
@@ -55,27 +46,16 @@ class DBStorage():
         return new_dict
 
     def new(self, obj):
-        """
-        add the object to the current database session (self.__session)
-        """
         self.__session.add(obj)
 
     def save(self):
-        """
-        commit all changes of the current database session
-        (self.__session)
-        """
         self.__session.commit()
 
     def delete(self, obj=None):
-        """delete from the current database session obj if not None"""
         if obj is not None:
             self.__session.delete(obj)
 
     def reload(self):
-        """
-        create all tables in the database and the current database session
-        """
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine,
                                        expire_on_commit=False)
@@ -83,5 +63,5 @@ class DBStorage():
         self.__session = Session()
 
     def close(self):
-        """close session"""
+        """closing the session"""
         self.__session.close()
